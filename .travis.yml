@@ -14,11 +14,10 @@ script:
   - docker images
   - docker tag techactivate/friendsapi techactivate/friendsapi:$(git rev-parse HEAD)
   - docker push  techactivate/friendsapi:$(git rev-parse HEAD)
+#    branch: master
 
-deploy:
-  provider: heroku
-  api_key:
-    secure:
-      xxx
-  on: heroku_production
-  app: friendsApi
+
+after_success:
+  - sudo docker login --username $HEROKU_DOCKER_USERNAME --password $HEROKU_AUTH_TOKEN registry.heroku.com
+  - sudo docker tag friendsapi:latest registry.heroku.com/friendsapi-mahajany/web
+  - if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST = "false" ]; then sudo docker push registry.heroku.com/friendsapi-mahajany/web; fi
