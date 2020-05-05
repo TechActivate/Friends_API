@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker pull openjdk:11-jdk
+  - docker pull maven:3-jdk-11
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+install:
+  - docker build -t friendsApi .
+  - docker build -t  friendsApi .
+
+script:
+  - docker images
+  - docker tag nfriendsApi $DOCKER_USERNAME/friendsApi:$(git rev-parse HEAD)
+  - docker push  $DOCKER_USERNAME/friendsApi:$(git rev-parse HEAD)
+
+deploy:
+  provider: heroku
+  api_key:
+    secure:
+      xxx
+  on: heroku_production
+  app: friendsApi
