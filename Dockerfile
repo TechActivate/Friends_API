@@ -1,7 +1,5 @@
-# Docker multi-stage build
- 
 #Stage-1: Build application with Maven
-FROM maven:3-jdk-11
+FROM maven:3-jdk-11 as BUILD_STAGE
 ADD . /workdir
 WORKDIR /workdir
  
@@ -12,16 +10,14 @@ RUN ls -l
 RUN mvn clean install -Ddependency-check.skip=true
 RUN ls
 RUN ls -l target/*
- 
-# 2. Just using the build artifact and then removing the build-container
+
+#Stage-2: Add build artifcat to the container
 FROM openjdk:11-jdk
  
 MAINTAINER Y.Mahajan
-VOLUME /tmp
 
 # Add Spring Boot app.jar to Container
-COPY --from=0 /workdir/target/FriendsAPIServer-0.0.0.1.jar app.jar
+COPY --from=BUILD_STAGE /workdir/target/FriendsAPIServer-0.0.0.1.jar app.jar
  
 # Fire up our Spring Boot app by default
-#CMD [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
 CMD [ "sh", "-c", "java -jar /app.jar" ]
