@@ -8,13 +8,12 @@ before_install:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 install:
-  - docker build -t friendsApi .
-  - docker build -t  friendsApi .
+  - docker build -t techactivate/friendsapi .
 
 script:
   - docker images
-  - docker tag nfriendsApi $DOCKER_USERNAME/friendsApi:$(git rev-parse HEAD)
-  - docker push  $DOCKER_USERNAME/friendsApi:$(git rev-parse HEAD)
+  - docker tag techactivate/friendsapi techactivate/friendsapi:$(git rev-parse HEAD)
+  - docker push  techactivate/friendsapi:$(git rev-parse HEAD)
 
 deploy:
   provider: heroku
