@@ -1,30 +1,19 @@
 sudo: required
 services:
-  - docker
-
+- docker
 before_install:
-  - docker pull openjdk:11-jdk
-  - docker pull maven:3-jdk-11
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-
+- docker pull openjdk:11-jdk
+- docker pull maven:3-jdk-11
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 install:
-  - docker build -t techactivate/friendsapi .
-
+- docker build -t techactivate/friendsapi .
 script:
-  - docker images
-  - docker tag techactivate/friendsapi techactivate/friendsapi:$(git rev-parse HEAD)
-  - docker push  techactivate/friendsapi:$(git rev-parse HEAD)
-#    branch: master
-
-
-#after_success:
-#  - sudo docker login --username $HEROKU_DOCKER_USERNAME --password $HEROKU_AUTH_TOKEN registry.heroku.com
-#  - docker build -t registry.heroku.com/friendsapi-mahajany/web .
-#  - sudo docker tag friendsapi:latest registry.heroku.com/friendsapi-mahajany/web
-##  - if [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST = "false" ]; then sudo docker push registry.heroku.com/friendsapi-mahajany/web; fi
-#   - sudo docker push registry.heroku.com/friendsapi-mahajany/web
+- docker images
+- docker tag techactivate/friendsapi techactivate/friendsapi:$(git rev-parse HEAD)
+- docker push  techactivate/friendsapi:$(git rev-parse HEAD)
 deploy:
+  on: master
   provider: heroku
-  api_key: "${API_KEY}
-#  on: heroku_production
-  app:  friendsapi-mahajany
+  app: friendsapi-mahajany
+  api_key:
+    secure: oR0sjiJcV8Esun5xbPSkO+TMPEvI4giX7qAwkcYpFIazBjXeSdp3HLMWlh4vS8I2Zygh78rz/I9y3nIg89meaKzHkqhdgCuv0xfNQQCDJEiC3O+GtYjf2wb86cL1V0jFPYN2pohRKnF3uIir8X9FikqTjFJ+Yb3askXFol7ZwAUNJbfCapq9dbWxS0+Tk1ap4GDYylWsENfHSqe+p/sfmHAD6G/E8acMfbbONQDVTF1MsIwRIm2otbspagVAehaf0KqPVN5ZUFr4yOELLcWhOB5ihpsc7GdCJ/Sf1Uj+M/y/cHza8sxFJrX4psECDJWfIt0TWTRA6jlK+IFyKFrBxtVrKHuxcBCQtsDMsm/t5AgMHBOAjmhtQG6BnDmn04vZAGeuPzB854X47/oIhervmOFJx6Qydonmlz4a9lg+ZCcbUk5eFhllaKiY/8JUuIhu3bNMpY1un1cCJD9iAIEHgXiraVl7Kvbrgh0+QkLCVVDikf8R5A0cawkCYSVzth+tOinLMC1Kfs8T5v+ixBnq9EcaoIr9F3+yy00GGlMuyXZQOUMWeha1MGkPUp1QPZVaQuvEC3y4k1vY8tCjIUxL22cVQZNjEQruYnDwYk4a5tWSp7KC+PAXAWio/jX368bXJj5zu4aa6Tn45xeqc8hYgD+NKyReywfD6BjSW7cbFFs=
